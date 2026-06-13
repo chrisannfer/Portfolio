@@ -32,9 +32,8 @@
     </script>
     <style>
         html, body {
-            overflow-x: hidden;
-            overflow-y: auto;
-            min-height: 100vh;
+            overflow: hidden;
+            height: 100%;
             width: 100%;
         }
 
@@ -46,16 +45,6 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            min-height: 100vh;
-        }
-
-        .desktop-wallpaper img,
-        img,
-        video,
-        svg {
-            max-width: 100%;
-            height: auto;
-            display: block;
         }
 
         .desktop-wallpaper img {
@@ -71,61 +60,8 @@
             transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s linear;
             pointer-events: none;
             position: absolute;
-            max-width: 95vw;
-            max-height: calc(100vh - 80px);
         }
-
-        @media (max-width: 900px) {
-            .window-app {
-                width: min(95vw, 760px) !important;
-                left: 50% !important;
-                top: 70px !important;
-                transform: translateX(-50%) !important;
-                height: auto !important;
-                max-height: calc(100vh - 120px) !important;
-            }
-
-            .window-app.active-window {
-                position: fixed !important;
-            }
-
-            .grid.grid-cols-12 {
-                grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-            }
-
-            #explorer-grid {
-                grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-            }
-
-            .col-span-3,
-            .col-span-9 {
-                grid-column: span 12 / span 13 !important;
-            }
-
-            .w-24 {
-                width: auto !important;
-            }
-
-            .fixed.bottom-3 {
-                position: static !important;
-                transform: none !important;
-                margin: 0 auto;
-                width: min(92vw, 340px);
-            }
-
-            .cursor-move {
-                cursor: default !important;
-            }
-        }
-
-        #txt-proj-payload img {
-            font-size: revert !important;
-            max-width: 100% !important;
-            height: auto !important;
-            display: block !important;
-            margin: 0 auto !important;
-        }
-
+        
         .window-app.active-window {
             transform: scale(1) !important;
             opacity: 1 !important;
@@ -190,9 +126,9 @@
         </div>
     </div>
 
-    <div class="w-full min-h-screen pt-12 pb-20 p-4 relative overflow-auto">
+    <div class="w-full h-full pt-12 pb-20 p-4 relative overflow-hidden">
         
-        <div class="flex flex-col gap-4 w-24 sm:w-24 md:w-24">
+        <div class="flex flex-col gap-4 w-24">
             
             <div id="desk-terminal" onclick="animateOpenWindow('win-terminal', this)" class="group flex flex-col items-center text-center p-2 rounded-lg hover:bg-white/10 border border-transparent hover:border-white/10 active:bg-white/15 transition-all cursor-pointer">
                 <div class="w-12 h-12 bg-neutral-900/85 border border-neutral-700/50 rounded-xl flex items-center justify-center text-emerald-400 font-mono text-xl font-bold drop-shadow-md group-hover:scale-105 transition-transform">
@@ -2492,10 +2428,6 @@
             changeDirectory('root');
             updateSystemClock();
             setInterval(updateSystemClock, 1000);
-        });
-
-        window.addEventListener('resize', () => {
-            document.querySelectorAll('.window-app.active-window').forEach(centerWindow);
         });
 
         // NATIVE WINDOW MANAGEMENT SYSTEM (DRAG + EDGE RESIZE LOGIC)
