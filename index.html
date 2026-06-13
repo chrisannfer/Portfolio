@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrisann_Ferrao@Portfolio: ~</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ubuntu: {
+                            bg: '#31102F',       /* Ubuntu terminal dark aubergine purple background */
+                            promptGreen: '#4AF626', /* Sharp neon green user status text */
+                            promptBlue: '#729FCF',  /* Linux folder directory path coloring text */
+                            header: '#3D3A34',   /* Dark classic window title bar */
+                            border: '#1A1A1A'    /* Hard structural terminal window bounds */
+                        },
+                        nordic: {
+                            window: '#242933',   
+                            header: '#1f232a',   
+                            border: '#3b4252',   
+                            text: '#d8dee9',     
+                            accent: '#88c0d0',   
+                            folder: '#4f7da1'    
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html, body {
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+        }
+
+        .desktop-wallpaper {
+            /* background: linear-gradient(to bottom, #4a1d6d, #9f3161, #d47668);
+            background-size: cover;
+            background-position: center; */
+            background-image: url('images/wallpaper.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .desktop-wallpaper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Smooth Application Scaling Transitions */
+        .window-app {
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s linear;
+            pointer-events: none;
+            position: absolute;
+        }
+        
+        .window-app.active-window {
+            transform: scale(1) !important;
+            opacity: 1 !important;
+            pointer-events: auto;
+        }
+        
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #242933;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #3b4252;
+            border-radius: 4px;
+        }
+
+        /* Window Resizer Handle Overlay Layout Styles */
+        .resize-handle {
+            position: absolute;
+            z-index: 50;
+        }
+        .resize-top { top: -3px; left: 4px; right: 4px; height: 6px; cursor: ns-resize; }
+        .resize-bottom { bottom: -3px; left: 4px; right: 4px; height: 6px; cursor: ns-resize; }
+        .resize-left { left: -3px; top: 4px; bottom: 4px; width: 6px; cursor: ew-resize; }
+        .resize-right { right: -3px; top: 4px; bottom: 4px; width: 6px; cursor: ew-resize; }
+        .resize-nw { top: -3px; left: -3px; width: 8px; height: 8px; cursor: nwse-resize; }
+        .resize-ne { top: -3px; right: -3px; width: 8px; height: 8px; cursor: nesw-resize; }
+        .resize-sw { bottom: -3px; left: -3px; width: 8px; height: 8px; cursor: nesw-resize; }
+        .resize-se { bottom: -3px; right: -3px; width: 8px; height: 8px; cursor: nwse-resize; }
+
+        @keyframes terminal-blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* Project viewer text scaling — bumps all text up one step, images excluded */
+        #txt-proj-payload { font-size: 13px; }
+        #txt-proj-payload .text-\[10px\] { font-size: 11px !important; }
+        #txt-proj-payload .text-\[11px\] { font-size: 12px !important; }
+        #txt-proj-payload .text-xs { font-size: 13px !important; }
+        #txt-proj-payload .text-sm { font-size: 14px !important; }
+        #txt-proj-payload .text-lg { font-size: 18px !important; }
+        #txt-proj-payload img { font-size: revert !important; }
+    </style>
+</head>
+<body class="text-nordic-text font-sans select-none desktop-wallpaper relative w-full h-full">
+
+    <div class="fixed top-0 left-0 right-0 h-7 bg-[#1a1c23]/80 backdrop-blur border-b border-white/5 flex items-center justify-between px-4 text-xs font-medium text-[#d8dee9] z-50">
+        <div class="flex items-center gap-4">
+            <span class="hover:text-white cursor-pointer">Activities</span>
+        </div>
+        <div id="status-clock" class="absolute left-1/2 -translate-x-1/2 tracking-wide font-mono text-[11px]">
+            sab 20 lgl &nbsp; <span class="font-bold">15:38</span>
+        </div>
+        <div class="flex items-center gap-3 text-sm">
+            <span class="bg-white/10 px-1.5 py-0.5 rounded text-[10px]">1</span>
+            <span class="text-xs">👤</span>
+            <span class="text-[11px] font-bold">it</span>
+            <span class="text-xs">🔊 🔋 ⏻</span>
+        </div>
+    </div>
+
+    <div class="w-full h-full pt-12 pb-20 p-4 relative overflow-hidden">
+        
+        <div class="flex flex-col gap-4 w-24">
+            
+            <div id="desk-terminal" onclick="animateOpenWindow('win-terminal', this)" class="group flex flex-col items-center text-center p-2 rounded-lg hover:bg-white/10 border border-transparent hover:border-white/10 active:bg-white/15 transition-all cursor-pointer">
+                <div class="w-12 h-12 bg-neutral-900/85 border border-neutral-700/50 rounded-xl flex items-center justify-center text-emerald-400 font-mono text-xl font-bold drop-shadow-md group-hover:scale-105 transition-transform">
+                    &gt;_
+                </div>
+                <span class="text-[11px] mt-1.5 text-white font-medium tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] px-1 truncate w-full">About Me</span>
+            </div>
+
+            <div id="desk-explorer" onclick="animateOpenWindow('win-explorer', this)" class="group flex flex-col items-center text-center p-2 rounded-lg hover:bg-white/10 border border-transparent hover:border-white/10 active:bg-white/15 transition-all cursor-pointer">
+                <div class="w-12 h-12 bg-[#4f7da1] border border-[#6092b7] rounded-xl flex items-center justify-center text-2xl shadow-inner text-white/90 drop-shadow-md group-hover:scale-105 transition-transform">
+                    📁
+                </div>
+                <span class="text-[11px] mt-1.5 text-white font-medium tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] px-1 truncate w-full">Explorer</span>
+            </div>
+
+            <a href="Chrisann_Ferrao_Resume_v5.1.pdf" target="_blank" class="group flex flex-col items-center text-center p-2 rounded-lg hover:bg-white/10 border border-transparent hover:border-white/10 active:bg-white/15 transition-all cursor-pointer block">
+                <div class="w-12 h-12 bg-amber-500 border border-amber-600 rounded-xl flex items-center justify-center text-2xl shadow-inner text-white/90 drop-shadow-md group-hover:scale-105 transition-transform relative">
+                    💼
+                    <div class="absolute bottom-0 right-0 bg-neutral-900 rounded-full w-4 h-4 flex items-center justify-center border border-neutral-700 text-[10px]">🔗</div>
+                </div>
+                <span class="text-[11px] mt-1.5 text-white font-medium tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] px-1 truncate w-full">Resume</span>
+            </a>
+
+            <div id="desk-connect" onclick="animateOpenWindow('win-connect', this)" class="group flex flex-col items-center text-center p-2 rounded-lg hover:bg-white/10 border border-transparent hover:border-white/10 active:bg-white/15 transition-all cursor-pointer">
+                <div class="w-12 h-12 bg-gray-100 border border-neutral-400/80 rounded shadow-md relative flex flex-col justify-between p-2 group-hover:scale-105 transition-transform">
+                    <div class="w-full h-0.5 bg-neutral-400/70 rounded-full"></div>
+                    <div class="w-4/5 h-0.5 bg-neutral-400/70 rounded-full"></div>
+                    <div class="w-full h-0.5 bg-neutral-400/70 rounded-full"></div>
+                    <div class="w-2/3 h-0.5 bg-neutral-400/70 rounded-full"></div>
+                    <div class="w-5/6 h-0.5 bg-neutral-400/70 rounded-full"></div>
+                    <div class="absolute bottom-1 right-1 text-[9px] font-bold text-orange-600 font-mono tracking-tighter">TXT</div>
+                </div>
+                <span class="text-[11px] mt-1.5 text-white font-medium tracking-wide drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] px-1 truncate w-full">connect.txt</span>
+            </div>
+
+        </div>
+
+        <div id="win-terminal" class="window-app bg-ubuntu-bg border border-neutral-700 rounded shadow-2xl overflow-hidden font-mono text-sm w-[780px] h-[460px]">
+            
+            <div class="resize-handle resize-top"></div>
+            <div class="resize-handle resize-bottom"></div>
+            <div class="resize-handle resize-left"></div>
+            <div class="resize-handle resize-right"></div>
+            <div class="resize-handle resize-nw"></div>
+            <div class="resize-handle resize-ne"></div>
+            <div class="resize-handle resize-sw"></div>
+            <div class="resize-handle resize-se"></div>
+
+            <div class="bg-neutral-800 border-b border-neutral-900 px-4 py-1.5 flex items-center justify-between cursor-move select-none relative z-10">
+                <div class="w-16"></div>
+                <span class="text-xs text-neutral-300 font-sans">Chrisann_Ferrao@Portfolio:~</span>
+                <div class="flex items-center gap-3 text-neutral-400 font-sans text-xs relative z-20">
+                    <button onclick="minimizeWindow('win-terminal')" class="hover:text-white px-1 font-bold">—</button>
+                    <button class="hover:text-white px-1">☐</button>
+                    <button onclick="closeWindow('win-terminal')" class="w-4 h-4 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold text-[10px]">✕</button>
+                </div>
+            </div>
+            
+            <div class="p-3 space-y-2.5 h-[calc(100%-32px)] overflow-y-auto custom-scroll text-base tracking-wide text-white relative z-10">
+                
+                <div class="flex items-start flex-wrap">
+                    <span class="text-ubuntu-promptGreen font-bold">Chrisann_Ferrao@Portfolio</span><span class="text-white font-bold">:</span><span class="text-ubuntu-promptBlue font-bold">~</span><span class="text-white font-bold">$</span>
+                    <span class="text-white ml-2">// About Profile</span>
+                </div>
+
+                <div class="flex items-start flex-wrap">
+                    <span class="text-ubuntu-promptGreen font-bold">Chrisann_Ferrao@Portfolio</span><span class="text-white font-bold">:</span><span class="text-ubuntu-promptBlue font-bold">~</span><span class="text-white font-bold">$</span>
+                    <span class="text-neutral-200 ml-2 font-sans text-[13px]">Electronics Engineer.</span>
+                </div>
+
+                <div class="flex items-start flex-wrap">
+                    <span class="text-ubuntu-promptGreen font-bold">Chrisann_Ferrao@Portfolio</span><span class="text-white font-bold">:</span><span class="text-ubuntu-promptBlue font-bold">~</span><span class="text-white font-bold">$</span>
+                    <span class="text-neutral-200 ml-2 font-sans text-[13px]">Building Computer Vision and Edge-AI Systems for</span>
+                    <span class="text-neutral-200 ml-2 font-sans text-[13px]">Industrial Automation</span>                   
+                </div>
+                
+                <div class="flex items-start flex-wrap">
+                    <span class="text-ubuntu-promptGreen font-bold">Chrisann_Ferrao@Portfolio</span><span class="text-white font-bold">:</span><span class="text-ubuntu-promptBlue font-bold">~</span><span class="text-white font-bold">$</span>
+                    <span class="text-neutral-200 ml-2 font-sans text-[13px]">An Electronics Engineering graduate with 1+ years of</span>
+                    <span class="text-neutral-200 ml-2 font-sans text-[13px]">experience design-integrating edge-AI and real-time computer vision systems to maximize throughput and automate precision industrial infrastructure.</span>
+                </div>
+
+                <div class="flex items-center">
+                    <span class="text-ubuntu-promptGreen font-bold">Chrisann_Ferrao@Portfolio</span><span class="text-white font-bold">:</span><span class="text-ubuntu-promptBlue font-bold">~</span><span class="text-white font-bold">$</span>
+                    <span class="inline-block w-2 h-4 bg-white ml-2" style="animation: terminal-blink 1s steps(2, start) infinite;"></span>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div id="win-explorer" class="window-app bg-nordic-window border border-nordic-border rounded-lg shadow-2xl overflow-hidden text-xs w-[900px] h-[560px]">
+            
+            <div class="resize-handle resize-top"></div>
+            <div class="resize-handle resize-bottom"></div>
+            <div class="resize-handle resize-left"></div>
+            <div class="resize-handle resize-right"></div>
+            <div class="resize-handle resize-nw"></div>
+            <div class="resize-handle resize-ne"></div>
+            <div class="resize-handle resize-sw"></div>
+            <div class="resize-handle resize-se"></div>
+
+            <div class="bg-nordic-header px-4 py-2 flex items-center justify-between cursor-move select-none">
+                <div class="w-16"></div>
+                <span class="text-xs text-neutral-400 font-bold">File Manager</span>
+                <div class="flex items-center gap-2 text-neutral-400 text-[10px] font-sans relative z-20">
+                    <button onclick="minimizeWindow('win-explorer')" class="hover:text-white px-1 font-bold">—</button>
+                    <button class="hover:text-white px-1">☐</button>
+                    <button onclick="closeWindow('win-explorer')" class="w-4 h-4 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-red-500 hover:text-white font-bold text-xs">✕</button>
+                </div>
+            </div>
+
+            <div class="bg-[#242933] border-b border-nordic-border/70 px-4 py-1.5 flex items-center justify-between text-neutral-400">
+                <div class="flex items-center gap-4 text-[13px]">
+                    <button onclick="changeDirectory('root')" class="hover:text-white cursor-pointer font-bold">⏮ Home</button>
+                    <span class="text-neutral-600">|</span>
+                    <span class="hover:text-white cursor-pointer" onclick="changeDirectory('experience')">Experience</span>
+                    <span class="hover:text-white cursor-pointer" onclick="changeDirectory('projects')">Projects</span>
+                    <span class="hover:text-white cursor-pointer" onclick="changeDirectory('education')">Education</span>
+                </div>
+                <div class="bg-neutral-900 px-3 py-0.5 rounded text-nordic-accent border border-nordic-border font-mono text-[13px] flex items-center gap-1">
+                    <span>🏠 chrisann</span> <span class="text-neutral-600">›</span> <span id="current-path" class="text-white font-bold">root</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-12 h-[calc(100%-68px)]">
+                <div class="col-span-3 border-r border-nordic-border/40 bg-[#1e222b] p-3 space-y-3 font-sans text-neutral-400 text-sm">
+                    <div>
+                        <p class="font-bold text-neutral-500 uppercase text-[10px] tracking-wider mb-1">Directories</p>
+                        <ul class="space-y-1.5 pl-1">
+                            <li onclick="changeDirectory('root')" class="text-nordic-accent font-bold cursor-pointer hover:underline">📂 Root</li>
+                            <li onclick="changeDirectory('experience')" class="hover:text-white cursor-pointer pl-2">📁 Experience</li>
+                            <li onclick="changeDirectory('projects')" class="hover:text-white cursor-pointer pl-2">📁 Projects</li>
+                            <li onclick="changeDirectory('education')" class="hover:text-white cursor-pointer pl-2">📁 Education</li>
+                            <li onclick="changeDirectory('certs')" class="hover:text-white cursor-pointer pl-2">📁 Certifications</li>
+                            <li onclick="changeDirectory('volunteer')" class="hover:text-white cursor-pointer pl-2">📁 Volunteer</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div id="explorer-grid" class="col-span-9 p-6 grid grid-cols-3 sm:grid-cols-4 gap-6 items-start bg-nordic-window overflow-y-auto custom-scroll">
+                    </div>
+            </div>
+        </div>
+
+        <div id="win-project-viewer" class="window-app bg-[#1a1c23] border border-nordic-accent/60 rounded shadow-2xl overflow-hidden font-mono text-xs w-[780px] h-[580px]">
+            <div class="bg-nordic-header px-4 py-1.5 flex items-center justify-between border-b border-nordic-border">
+                <span id="txt-proj-header" class="text-nordic-accent font-bold">repository_stream.log</span>
+                <button onclick="closeWindow('win-project-viewer')" class="text-neutral-400 hover:text-white font-bold text-sm">✕</button>
+            </div>
+            <div id="txt-proj-payload" class="p-4 space-y-3 text-neutral-300 leading-relaxed h-[calc(100%-28px)] overflow-y-auto custom-scroll"></div>
+        </div>
+
+        <div id="win-connect" class="window-app bg-[#2e3440] border border-neutral-600 rounded shadow-2xl overflow-hidden font-sans text-sm w-[500px] h-[340px]">
+            <div class="bg-[#232831] px-4 py-1.5 flex items-center justify-between border-b border-neutral-700 cursor-move select-none">
+                <div class="w-16"></div>
+                <span class="text-xs text-neutral-300 font-mono">connect.txt — Gedit</span>
+                <div class="flex items-center gap-3 text-neutral-400 text-xs">
+                    <button onclick="minimizeWindow('win-connect')" class="hover:text-white px-1 font-bold">—</button>
+                    <button class="hover:text-white px-1">☐</button>
+                    <button onclick="closeWindow('win-connect')" class="w-4 h-4 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold text-[10px]">✕</button>
+                </div>
+            </div>
+            
+            <div class="p-6 space-y-6 text-neutral-200 overflow-y-auto custom-scroll h-[calc(100%-32px)] bg-[#2e3440] font-mono text-xs select-text">
+                <div>
+                    <h3 class="text-orange-400 font-bold mb-2 border-b border-neutral-700 pb-1">// Contact & Social Directory Links</h3>
+                    <p class="text-neutral-400 mb-4">Feel free to reach out via email or connect with me on professional networks.</p>
+                </div>
+                
+                <div class="space-y-3 pl-2">
+                    <div class="flex items-center gap-3">
+                        <span class="text-neutral-500 w-20 inline-block font-bold select-none">Contact:</span>
+                        <span class="text-neutral-200">
+                            +91 8698077092
+                        </span>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <span class="text-neutral-500 w-20 inline-block font-bold select-none">Email:</span>
+                        <a href="mailto:chrisannferr@gmail.com" class="text-cyan-400 hover:underline hover:text-cyan-300 flex items-center gap-1">
+                            chrisannferr@gmail.com 🔗
+                        </a>
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <span class="text-neutral-500 w-20 inline-block font-bold select-none">LinkedIn:</span>
+                        <a href="https://www.linkedin.com/in/chrisannferrao/" target="_blank" class="text-cyan-400 hover:underline hover:text-cyan-300 flex items-center gap-1">
+                            linkedin.com/in/chrisann-ferrao 🔗
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-3 left-1/2 -translate-x-1/2 bg-[#1f232a]/80 backdrop-blur border border-nordic-border/70 px-4 py-2 rounded-2xl flex items-center gap-4 shadow-2xl z-50">
+        <button id="dock-terminal" onclick="animateOpenWindow('win-terminal', this)" class="w-10 h-10 bg-nordic-window hover:bg-neutral-800 border border-nordic-border rounded-xl flex items-center justify-center text-nordic-green text-lg font-mono transition-transform hover:-translate-y-1 shadow-md" title="About Me">
+            &gt;_
+        </button>
+        <button id="dock-explorer" onclick="animateOpenWindow('win-explorer', this)" class="w-10 h-10 bg-nordic-window hover:bg-neutral-800 border border-nordic-border rounded-xl flex items-center justify-center text-xl transition-transform hover:-translate-y-1 shadow-md" title="Projects">
+            📁
+        </button>
+        <button id="dock-connect" onclick="animateOpenWindow('win-connect', this)" class="w-10 h-10 bg-gray-100 hover:bg-white rounded-xl flex flex-col justify-between p-2.5 transition-transform hover:-translate-y-1 shadow-md border border-neutral-400 relative" title="Connect">
+            <div class="w-full h-0.5 bg-neutral-400/80 rounded-full"></div>
+            <div class="w-4/5 h-0.5 bg-neutral-400/80 rounded-full"></div>
+            <div class="w-full h-0.5 bg-neutral-400/80 rounded-full"></div>
+            <div class="w-3/4 h-0.5 bg-neutral-400/80 rounded-full"></div>
+            <div class="absolute bottom-1 right-1 text-[7px] font-bold text-orange-600 font-mono">TXT</div>
+        </button>
+    </div>
+
+    <script>
+        // Comprehensive Professional Resume Registry Map 
+        const workspaceRegistry = {
+            // Experience Logs
+            'exp-godrej': {
+                file: "sys_log:~/Experience/godrej_enterprises.log",
+                output: `
+                <div class="space-y-5">
+
+                    <div>
+                        <p class="text-orange-400 font-bold text-sm">
+                            Automation Engineer (Trainee) @ Godrej Enterprises Group
+                        </p>
+
+                        <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                            Aug 2024 - Present | Madkai, Goa
+                        </p>
+                    </div>
+
+                    <!-- IMPACT -->
+                    <div class="grid grid-cols-3 gap-2 text-center">
+
+                        <div class="border border-emerald-500/30 bg-emerald-500/5 rounded p-3">
+                            <div class="text-2xl font-bold text-emerald-400">800%</div>
+                            <div class="text-xs text-neutral-400">Throughput Increase</div>
+                        </div>
+
+                        <div class="border border-cyan-500/30 bg-cyan-500/5 rounded p-3">
+                            <div class="text-2xl font-bold text-cyan-400">75%</div>
+                            <div class="text-xs text-neutral-400">Inspection Time ↓</div>
+                        </div>
+
+                        <div class="border border-orange-500/30 bg-orange-500/5 rounded p-3">
+                            <div class="text-2xl font-bold text-orange-400">&lt;40µm</div>
+                            <div class="text-xs text-neutral-400">Vision Accuracy</div>
+                        </div>
+
+                    </div>
+
+                    <!-- ======================================= -->
+                    <!-- ELOCKS -->
+                    <!-- ======================================= -->
+
+                    <div class="border border-neutral-700 rounded-lg p-4 bg-neutral-900/40">
+
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="text-white font-semibold">
+                                [PROJECT_01] E-Locks Assembly Line Automation
+                            </p>
+
+                            <span class="text-emerald-400 text-xs font-mono">
+                                DEPLOYED
+                            </span>
+                        </div>
+
+                        <div class="text-center mb-4">
+                            <div class="inline-block px-3 py-2 rounded border border-orange-500/40 bg-orange-500/10 text-orange-300 text-xs font-mono">
+                                E-Lock Assembly Line
+                            </div>
+                        </div>
+
+                        <div class="text-center mb-5">
+                            <div class="inline-block px-4 py-2 rounded border border-cyan-500/40 bg-cyan-500/10 text-cyan-300 text-xs font-mono">
+                                Raspberry Pi 5 Controller
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center text-neutral-500 mb-2">
+                            ↓
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
+
+                            <div class="rounded border border-blue-500/40 bg-blue-500/5 p-3">
+                                <div class="text-blue-300 font-mono text-xs mb-1">
+                                    📷 Vision
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Capacitive Pattern Detection,
+                                    <br>
+                                    LED Colour Verification
+                                </div>
+                            </div>
+
+                            <div class="rounded border border-purple-500/40 bg-purple-500/5 p-3">
+                                <div class="text-purple-300 font-mono text-xs mb-1">
+                                    🔊 Audio
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    MFCC Extraction,
+                                    <br>
+                                    Cosine Similarity
+                                </div>
+                            </div>
+
+                            <div class="rounded border border-pink-500/40 bg-pink-500/5 p-3">
+                                <div class="text-pink-300 font-mono text-xs mb-1">
+                                    🎤 Speech
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Vosk Recognition,
+                                    <br>
+                                    Phrase Verification
+                                </div>
+                            </div>
+
+                            <div class="rounded border border-yellow-500/40 bg-yellow-500/5 p-3">
+                                <div class="text-yellow-300 font-mono text-xs mb-1">
+                                    ⚡ Sensor
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    SICK Proximity,
+                                    <br>
+                                    Deadbolt Detection
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="flex justify-center text-neutral-500 mb-2">
+                            ↓
+                        </div>
+
+                        <div class="text-center mb-5">
+                            <div class="inline-block px-4 py-2 rounded border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 text-xs font-mono">
+                                Quality Decision Engine
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center text-neutral-500 mb-2">
+                            ↓
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2 mb-5">
+
+                            <div class="rounded border border-cyan-500/30 bg-cyan-500/5 p-3 text-center">
+                                <div class="text-cyan-300 text-xs font-mono">
+                                    Flask Dashboard
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Real-Time Monitoring
+                                </div>
+                            </div>
+
+                            <div class="rounded border border-green-500/30 bg-green-500/5 p-3 text-center">
+                                <div class="text-green-300 text-xs font-mono">
+                                    SQL Database
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Assembly & Inspection History
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="flex justify-center text-neutral-500 mb-2">
+                            ↓
+                        </div>
+
+                        <div class="text-center">
+                            <span class="px-4 py-2 rounded border border-emerald-500 bg-emerald-500/10 text-emerald-400 font-bold font-mono text-xs">
+                                PASS / FAIL OUTPUT
+                            </span>
+                        </div>
+
+                        <div class="mt-4 text-xs text-neutral-300">
+                            Multi-modal inspection platform integrating computer vision,
+                            audio verification, speech recognition and sensor fusion for
+                            automated quality assurance.
+                        </div>
+
+                    </div>
+                    
+                    <!-- ======================================= -->
+                    <!-- INSPECTION -->
+                    <!-- ======================================= -->
+
+                    <div class="border border-neutral-700 rounded-lg p-4 bg-neutral-900/40">
+
+                    <div class="flex justify-between items-center mb-4">
+                        <p class="text-white font-semibold">
+                            [PROJECT_02] Key Ward Cutting Inspection System
+                        </p>
+
+                        <span class="text-orange-400 text-xs font-mono">
+                            PRECISION METROLOGY
+                        </span>
+                    </div>
+
+                    <!-- IMPACT -->
+
+                    <div class="grid grid-cols-3 gap-2 mb-5">
+
+                        <div class="text-center border border-orange-500/30 bg-orange-500/5 rounded p-2">
+                            <div class="text-orange-400 font-bold text-lg">
+                                &lt;40µm
+                            </div>
+                            <div class="text-[10px] text-neutral-400">
+                                Accuracy
+                            </div>
+                        </div>
+
+                        <div class="text-center border border-cyan-500/30 bg-cyan-500/5 rounded p-2">
+                            <div class="text-cyan-400 font-bold text-lg">
+                                &lt;5µm
+                            </div>
+                            <div class="text-[10px] text-neutral-400">
+                                Repeatability
+                            </div>
+                        </div>
+
+                        <div class="text-center border border-emerald-500/30 bg-emerald-500/5 rounded p-2">
+                            <div class="text-emerald-400 font-bold text-lg">
+                                75%
+                            </div>
+                            <div class="text-[10px] text-neutral-400">
+                                Inspection Time ↓
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- SYSTEM FLOW -->
+
+                    <div class="space-y-3 font-mono text-[11px]">
+
+                        <div class="text-center">
+                            <div class="inline-block px-3 py-2 rounded border border-orange-500/30 bg-orange-500/5 text-orange-300">
+                                Lever Key
+                            </div>
+                        </div>
+
+                        <div class="text-center text-neutral-500">↓</div>
+
+                        <div class="grid grid-cols-2 gap-2">
+
+                            <div class="p-2 rounded border border-cyan-500/30 bg-cyan-500/5">
+                                <div class="text-cyan-300 mb-1">
+                                    📷 Imaging Hardware
+                                </div>
+                                <div class="text-neutral-400 text-[10px]">
+                                    Raspberry Pi HQ Camera
+                                    <br>
+                                    VS Technology Telecentric Lens
+                                </div>
+                            </div>
+
+                            <div class="p-2 rounded border border-blue-500/30 bg-blue-500/5">
+                                <div class="text-blue-300 mb-1">
+                                    💡 Optical Setup
+                                </div>
+                                <div class="text-neutral-400 text-[10px]">
+                                    Collimated Backlight
+                                    <br>
+                                    Distortion-Free Silhouettes
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="text-center text-neutral-500">↓</div>
+
+                        <div class="grid grid-cols-3 gap-2">
+
+                            <div class="p-2 rounded border border-purple-500/30 bg-purple-500/5">
+                                <div class="text-purple-300">
+                                    Edge Detection
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Gradient-Based
+                                </div>
+                            </div>
+
+                            <div class="p-2 rounded border border-pink-500/30 bg-pink-500/5">
+                                <div class="text-pink-300">
+                                    Subpixel Localization
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Precision Edge Tracking
+                                </div>
+                            </div>
+
+                            <div class="p-2 rounded border border-fuchsia-500/30 bg-fuchsia-500/5">
+                                <div class="text-fuchsia-300">
+                                    Curve Fitting
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Geometry Recovery
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="text-center text-neutral-500">↓</div>
+
+                        <div class="grid grid-cols-2 gap-2">
+
+                            <div class="p-2 rounded border border-yellow-500/30 bg-yellow-500/5">
+                                <div class="text-yellow-300">
+                                    RANSAC Calibration
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Robust Model Fitting
+                                </div>
+                            </div>
+
+                            <div class="p-2 rounded border border-amber-500/30 bg-amber-500/5">
+                                <div class="text-amber-300">
+                                    Pixel → mm Conversion
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Region-Specific Scaling
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="text-center text-neutral-500">↓</div>
+
+                        <div class="text-center">
+                            <div class="inline-block px-4 py-2 rounded border border-emerald-500/40 bg-emerald-500/10 text-emerald-300">
+                                Engineering Drawing Comparison
+                            </div>
+                        </div>
+
+                        <div class="text-center text-neutral-500">↓</div>
+
+                        <div class="text-center">
+                            <div class="inline-block px-4 py-2 rounded border border-green-500/40 bg-green-500/10 text-green-300 font-bold">
+                                Automated Pass / Fail Validation
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <p class="mt-5 text-xs text-neutral-300">
+                        High-precision machine vision metrology system for automated verification
+                        of lever key ward dimensions, combining telecentric imaging, sub-pixel
+                        measurement, calibration modelling, and real-time deviation analysis
+                        against engineering drawings.
+                    </p>
+
+                    </div>
+
+                    <!-- ======================================= -->
+                    <!-- OCR -->
+                    <!-- ======================================= -->
+
+                    <div class="border border-neutral-700 rounded-lg p-4 bg-neutral-900/40">
+
+                        <div class="border border-neutral-700 rounded-lg p-4 bg-neutral-900/40">
+
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="text-white font-semibold">
+                                [PROJECT_03] Key Number Detection System (OCR)
+                            </p>
+
+                            <span class="text-emerald-400 text-xs font-mono">
+                                DEPLOYED
+                            </span>
+                        </div>
+
+                        <!-- Impact -->
+
+                        <div class="grid grid-cols-2 gap-2 mb-5">
+
+                            <div class="text-center border border-emerald-500/30 bg-emerald-500/5 rounded p-2">
+                                <div class="text-emerald-400 font-bold text-lg">
+                                    70%
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Faster Identification
+                                </div>
+                            </div>
+
+                            <div class="text-center border border-cyan-500/30 bg-cyan-500/5 rounded p-2">
+                                <div class="text-cyan-400 font-bold text-lg">
+                                    Edge AI
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Raspberry Pi Deployment
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- System Flow -->
+
+                        <div class="space-y-3 font-mono text-[11px]">
+
+                            <div class="text-center">
+                                <div class="inline-block px-3 py-2 rounded border border-orange-500/30 bg-orange-500/5 text-orange-300">
+                                    Engraved Key
+                                </div>
+                            </div>
+
+                            <div class="text-center text-neutral-500">↓</div>
+
+                            <div class="grid grid-cols-2 gap-2">
+
+                                <div class="p-2 rounded border border-blue-500/30 bg-blue-500/5">
+                                    <div class="text-blue-300 mb-1">
+                                        📷 Imaging Hardware
+                                    </div>
+                                    <div class="text-neutral-400 text-[10px]">
+                                        Raspberry Pi HQ Camera
+                                        <br>
+                                        16 mm Lens
+                                    </div>
+                                </div>
+
+                                <div class="p-2 rounded border border-cyan-500/30 bg-cyan-500/5">
+                                    <div class="text-cyan-300 mb-1">
+                                        ⚙️ Edge Platform
+                                    </div>
+                                    <div class="text-neutral-400 text-[10px]">
+                                        Raspberry Pi
+                                        <br>
+                                        Real-Time Processing
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="text-center text-neutral-500">↓</div>
+
+                            <div class="grid grid-cols-3 gap-2">
+
+                                <div class="p-2 rounded border border-cyan-500/30 bg-cyan-500/5">
+                                    <div class="text-cyan-300">
+                                        CLAHE
+                                    </div>
+                                    <div class="text-[10px] text-neutral-400">
+                                        Contrast Enhancement
+                                    </div>
+                                </div>
+
+                                <div class="p-2 rounded border border-purple-500/30 bg-purple-500/5">
+                                    <div class="text-purple-300">
+                                        Noise Reduction
+                                    </div>
+                                    <div class="text-[10px] text-neutral-400">
+                                        Robust Imaging
+                                    </div>
+                                </div>
+
+                                <div class="p-2 rounded border border-pink-500/30 bg-pink-500/5">
+                                    <div class="text-pink-300">
+                                        Binary Enhancement
+                                    </div>
+                                    <div class="text-[10px] text-neutral-400">
+                                        OCR Optimization
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="text-center text-neutral-500">↓</div>
+
+                            <div class="grid grid-cols-2 gap-2">
+
+                                <div class="p-2 rounded border border-emerald-500/30 bg-emerald-500/5">
+                                    <div class="text-emerald-300">
+                                        EasyOCR Engine
+                                    </div>
+                                    <div class="text-[10px] text-neutral-400">
+                                        Character Extraction
+                                    </div>
+                                </div>
+
+                                <div class="p-2 rounded border border-green-500/30 bg-green-500/5">
+                                    <div class="text-green-300">
+                                        Key Validation
+                                    </div>
+                                    <div class="text-[10px] text-neutral-400">
+                                        Pattern Verification
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="text-center text-neutral-500">↓</div>
+
+                            <div class="text-center">
+                                <div class="inline-block px-4 py-2 rounded border border-emerald-500/40 bg-emerald-500/10 text-emerald-300 font-bold">
+                                    Automated Identification Result
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <p class="mt-5 text-xs text-neutral-300">
+                            Computer vision-based OCR system for automatic detection and validation
+                            of engraved key numbers. Combined adaptive image enhancement with
+                            EasyOCR to achieve reliable extraction under varying lighting conditions,
+                            deployed as a lightweight real-time edge solution on Raspberry Pi hardware.
+                        </p>
+
+                        </div>
+`
+            },
+            'exp-isro': {
+                file: "sys_log:~/Experience/isro_satellite_centre.log",
+                output: `
+
+                <div class="space-y-4">
+
+                    <div>
+                        <p class="text-orange-400 font-bold text-sm">
+                            Intern @ UR Rao Satellite Centre (ISRO)
+                        </p>
+
+                        <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                            Jul 2024 - Aug 2024 | Bengaluru, Karnataka
+                        </p>
+                    </div>
+
+                    <div class="border border-neutral-700 rounded-lg p-4 bg-neutral-900/40">
+
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="text-white font-semibold">
+                                [PROJECT_01] Gaganyaan Audio Acquisition Subsystem
+                            </p>
+
+                            <span class="text-cyan-400 text-xs font-mono">
+                                FPGA / VHDL
+                            </span>
+                        </div>
+
+                        <!-- Skills -->
+
+                        <div class="grid grid-cols-4 gap-2 mb-5">
+
+                            <div class="text-center border border-orange-500/30 bg-orange-500/5 rounded p-2">
+                                <div class="text-orange-400 font-bold text-sm">
+                                    FPGA
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Hardware Logic
+                                </div>
+                            </div>
+
+                            <div class="text-center border border-cyan-500/30 bg-cyan-500/5 rounded p-2">
+                                <div class="text-cyan-400 font-bold text-sm">
+                                    VHDL
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Design & Testing
+                                </div>
+                            </div>
+
+                            <div class="text-center border border-purple-500/30 bg-purple-500/5 rounded p-2">
+                                <div class="text-purple-400 font-bold text-sm">
+                                    UART
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Data Transfer
+                                </div>
+                            </div>
+
+                            <div class="text-center border border-emerald-500/30 bg-emerald-500/5 rounded p-2">
+                                <div class="text-emerald-400 font-bold text-sm">
+                                    C
+                                </div>
+                                <div class="text-[10px] text-neutral-400">
+                                    Visualization
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Architecture -->
+
+                        <div class="space-y-3 font-mono text-[11px]">
+
+                            <div class="text-center">
+                                <div class="inline-block px-3 py-2 rounded border border-orange-500/30 bg-orange-500/5 text-orange-300">
+                                    🎤 Audio Input
+                                </div>
+                            </div>
+
+                            <div class="text-center text-neutral-500">↓</div>
+
+                            <div class="text-center">
+                                <div class="inline-block px-3 py-2 rounded border border-cyan-500/30 bg-cyan-500/5 text-cyan-300">
+                                    ADC Conversion
+                                </div>
+                            </div>
+
+                            <div class="text-center text-neutral-500">↓</div>
+
+                            <div class="grid grid-cols-2 gap-2">
+
+                                <div class="p-2 rounded border border-purple-500/30 bg-purple-500/5">
+                                    <div class="text-purple-300">
+                                        FPGA Storage Logic
+                                    </div>
+                                    <div class="text-[10px] text-neutral-400">
+                                        VHDL Implementation
+                                    </div>
+                                </div>
+
+                                <div class="p-2 rounded border border-pink-500/30 bg-pink-500/5">
+                                    <div class="text-pink-300">
+                                        Playback Logic
+                                    </div>
+                                    <div class="text-[10px] text-neutral-400">
+                                        Audio Reconstruction
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="text-center text-neutral-500">↓</div>
+
+                            <div class="grid grid-cols-2 gap-2">
+
+                                <div class="p-2 rounded border border-yellow-500/30 bg-yellow-500/5">
+                                    <div class="text-yellow-300">
+                                        VHDL Testbenches
+                                    </div>
+                                    <div class="text-[10px] text-neutral-400">
+                                        Functional Verification
+                                    </div>
+                                </div>
+
+                                <div class="p-2 rounded border border-amber-500/30 bg-amber-500/5">
+                                    <div class="text-amber-300">
+                                        UART Interface
+                                    </div>
+                                    <div class="text-[10px] text-neutral-400">
+                                        FPGA ↔ PC Communication
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="text-center text-neutral-500">↓</div>
+
+                            <div class="text-center">
+                                <div class="inline-block px-4 py-2 rounded border border-emerald-500/40 bg-emerald-500/10 text-emerald-300">
+                                    C Program Data Visualization
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <p class="mt-5 text-xs text-neutral-300">
+                            Developed and verified a prototype audio acquisition subsystem for
+                            the Gaganyaan mission. Implemented FPGA-based storage and playback
+                            logic in VHDL, created simulation testbenches for validation, and
+                            established UART communication with a PC for real-world testing and
+                            visualization of acquired data.
+                        </p>
+
+                    </div>
+
+                </div>
+
+                `
+            },
+            // Project Logs
+            'proj-uuv': {
+                file: "sys_log:~/Projects/uuv_navigation.log",
+                output: `
+
+                <div class="space-y-4">
+
+                <p class="text-nordic-accent font-bold text-sm">
+                Navigation & Localization of UUVs
+                </p>
+
+                <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                Sept 2024 – May 2025
+                </p>
+
+                <!-- METRICS -->
+                <div class="grid grid-cols-4 gap-2 text-xs text-center">
+
+                <div class="p-2 border border-cyan-500/30 bg-cyan-500/5 rounded">
+                <div class="text-cyan-400 font-bold">6DOF</div>
+                <div class="text-neutral-400">Pose Tracking</div>
+                </div>
+
+                <div class="p-2 border border-emerald-500/30 bg-emerald-500/5 rounded">
+                <div class="text-emerald-400 font-bold">AprilTag</div>
+                <div class="text-neutral-400">Localization</div>
+                </div>
+
+                <div class="p-2 border border-orange-500/30 bg-orange-500/5 rounded">
+                <div class="text-orange-400 font-bold">PnP</div>
+                <div class="text-neutral-400">Pose Solver</div>
+                </div>
+
+                <div class="p-2 border border-purple-500/30 bg-purple-500/5 rounded">
+                <div class="text-purple-400 font-bold">BlueOS</div>
+                <div class="text-neutral-400">Telemetry</div>
+                </div>
+
+                </div>
+
+                <!-- TECH STACK -->
+                <div class="flex flex-wrap gap-1 text-[10px] font-mono">
+
+                <span class="px-2 py-1 border border-neutral-700 rounded">Python</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">OpenCV</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">AprilTag</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">MAVLink</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">BlueOS</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Pixhawk</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Raspberry Pi 4</span>
+
+                </div>
+
+                <!-- ARCHITECTURE -->
+                <div class="font-mono text-[11px] text-center space-y-2">
+
+                <div class="text-orange-300">AprilTag Marker Field</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-cyan-300">Underwater Camera System</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-purple-300">PnP / EPnP Pose Estimation</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-pink-300">MAVLink Coordinate Stream</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-emerald-300">BlueOS + Pixhawk Integration</div>
+
+                </div>
+
+                <!-- SCREENSHOTS -->
+                <div class="grid grid-cols-2 gap-3">
+
+                <div>
+                <img src="images/apriltag_detection.png"
+                class="rounded border border-neutral-700">
+                <p class="text-[10px] text-center text-neutral-400 mt-1">
+                AprilTag Detection & Pose Estimation
+                </p>
+
+                <!-- SAMPLE OUTPUT -->
+                <div class="bg-black/30 rounded p-3 font-mono text-[11px] border border-neutral-800">
+
+                X = 2.41m<br>
+                Y = 1.18m<br>
+                Z = -0.76m<br>
+                Roll = 1.3°<br>
+                Pitch = -0.8°<br>
+                Yaw = 89.2°
+
+                </div>
+                </div>
+
+                <div>
+                <img src="images/3d_mapping.png"
+                class="rounded border border-neutral-700">
+                <p class="text-[10px] text-center text-neutral-400 mt-1">
+                Real-Time 3D Trajectory Visualization
+                </p>
+                </div>
+
+                </div>
+
+                <!-- CONTRIBUTIONS -->
+                <div class="border-l-2 border-cyan-500 pl-3 text-xs space-y-1">
+
+                <div>• Developed vision-based underwater localization pipeline</div>
+
+                <div>• Implemented AprilTag detection and 6DOF pose estimation</div>
+
+                <div>• Generated real-time vehicle trajectory visualization</div>
+
+                <div>• Streamed localization telemetry through MAVLink</div>
+
+                <div>• Integrated localization stack with BlueOS ecosystem</div>
+
+                </div>
+
+                <p class="text-xs text-neutral-300 mt-3">
+
+                Designed and implemented a vision-based underwater localization
+                framework using AprilTag fiducial markers, OpenCV pose estimation,
+                MAVLink telemetry, and BlueOS integration for real-time UUV
+                navigation and trajectory monitoring.
+
+                </p>
+
+                </div>
+
+                `
+                },
+            'proj-ga': {
+                file: "sys_log:~/Projects/genetic_algorithm.log",
+                output: `
+
+                <div class="space-y-4">
+
+                <p class="text-nordic-accent font-bold text-sm">
+                Evolutionary Clustering using Genetic Algorithms
+                </p>
+
+                <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                Sept – Oct 2024
+                </p>
+
+                <!-- METRICS -->
+                <div class="grid grid-cols-4 gap-2 text-xs text-center">
+
+                <div class="p-2 border border-purple-500/30 bg-purple-500/5 rounded">
+                <div class="text-purple-400 font-bold">20+</div>
+                <div class="text-neutral-400">Generations</div>
+                </div>
+
+                <div class="p-2 border border-cyan-500/30 bg-cyan-500/5 rounded">
+                <div class="text-cyan-400 font-bold">200</div>
+                <div class="text-neutral-400">Population</div>
+                </div>
+
+                <div class="p-2 border border-orange-500/30 bg-orange-500/5 rounded">
+                <div class="text-orange-400 font-bold">3</div>
+                <div class="text-neutral-400">Clusters</div>
+                </div>
+
+                <div class="p-2 border border-emerald-500/30 bg-emerald-500/5 rounded">
+                <div class="text-emerald-400 font-bold">5.8105</div>
+                <div class="text-neutral-400">Best SSE</div>
+                </div>
+
+                </div>
+
+                <!-- TECH STACK -->
+                <div class="flex flex-wrap gap-1 text-[10px] font-mono">
+
+                <span class="px-2 py-1 border border-neutral-700 rounded">Python</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">NumPy</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Matplotlib</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Genetic Algorithm</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Optimization</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Clustering</span>
+
+                </div>
+
+                <!-- PIPELINE -->
+                <div class="font-mono text-[11px] text-center space-y-2">
+
+                <div class="text-orange-300">Random Centroid Population</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-cyan-300">Tournament Selection</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-purple-300">Uniform Crossover</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-pink-300">Adaptive Mutation</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-yellow-300">Elitism Preservation</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-emerald-300">Optimized Clustering</div>
+
+                </div>
+
+                <!-- EVOLUTION GIF -->
+                <div class="space-y-2">
+
+                <div class="text-center text-cyan-300 text-xs">
+                Centroid Evolution Across Generations
+                </div>
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg overflow-hidden">
+
+                <img 
+                src="images/ga_evolution.gif" 
+                class="block mx-auto w-full h-auto max-w-md" 
+                />
+
+                <div class="p-2 text-center text-[10px] text-neutral-400">
+                SSE reduction from 9.46 to 5.82 demonstrating progressive optimization across generations.
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- RESULTS -->
+                <div class="grid grid-cols-2 gap-3">
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg p-3">
+
+                <div class="text-cyan-400 text-xs font-bold">
+                20 Generations
+                </div>
+
+                <div class="text-neutral-300 text-xs mt-2">
+                GA SSE = 5.8168
+                </div>
+
+                <div class="text-neutral-500 text-[10px] mt-1">
+                Near-optimal clustering solution
+                </div>
+
+                </div>
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg p-3">
+
+                <div class="text-purple-400 text-xs font-bold">
+                50 Generations
+                </div>
+
+                <div class="text-neutral-300 text-xs mt-2">
+                GA SSE = 5.8105
+                </div>
+
+                <div class="text-neutral-500 text-[10px] mt-1">
+                Outperformed K-Means baseline
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- CONVERGENCE GRAPH -->
+                <div class="space-y-2">
+
+                <div class="text-center text-purple-300 text-xs">
+                Fitness Convergence
+                </div>
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg overflow-hidden">
+
+                <img
+                src="images/ga_convergence.png"
+                class="w-full"
+                />
+
+                <div class="p-2 text-center text-[10px] text-neutral-400">
+                K-Means VS Genetic Algorithm converging from random initialization to optimized cluster placement over 20 generations.
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- GA VS KMEANS -->
+                <div class="space-y-2">
+
+                <div class="text-center text-emerald-300 text-xs">
+                GA vs K-Means Benchmark
+                </div>
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg overflow-hidden">
+
+                <img 
+                src="images/ga_vs_kmeans.png" 
+                class="block mx-auto w-full h-auto max-w-md" 
+                />
+
+                <div class="p-2 text-center text-[10px] text-neutral-400">
+                Direct comparison using identical initial centroids. Genetic Algorithm achieved lower SSE after sufficient generations.
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- CONTRIBUTIONS -->
+                <div class="border-l-2 border-purple-500 pl-3 text-xs space-y-1">
+
+                <div>• Implemented clustering framework entirely from scratch using Genetic Algorithms</div>
+
+                <div>• Developed tournament selection, uniform crossover and adaptive mutation operators</div>
+
+                <div>• Introduced elitism-based population preservation for stable convergence</div>
+
+                <div>• Visualized centroid movement through generation-by-generation GIF animations</div>
+
+                <div>• Benchmarked against K-Means using identical initialization conditions</div>
+
+                <div>• Achieved lower SSE than K-Means after extended evolutionary optimization</div>
+
+                </div>
+
+                <!-- PERFORMANCE -->
+                <div class="bg-black/30 rounded p-3 font-mono text-[11px] border border-neutral-800">
+
+                Generation 01 SSE = 9.4606<br>
+                Generation 10 SSE = 5.9159<br>
+                Generation 20 SSE = 5.8197<br>
+                Final SSE = 5.8168
+
+                </div>
+
+                <p class="text-xs text-neutral-300">
+
+                Designed and implemented a population-based clustering framework using Genetic Algorithms. Explored tournament selection, uniform crossover, adaptive mutation, and elitism strategies while minimizing clustering error through SSE optimization and benchmarking performance against traditional K-Means clustering.
+
+                </p>
+
+                </div>
+
+                `
+                },
+            'proj-pcb': {
+                file: "sys_log:~/Projects/arduino_breakout_pcb.log",
+                output: `
+
+                <div class="space-y-4">
+
+                <p class="text-nordic-accent font-bold text-sm">
+                Arduino Robotics Breakout PCB
+                </p>
+
+                <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                Mar – Apr 2024
+                </p>
+
+                <!-- METRICS -->
+                <div class="grid grid-cols-4 gap-2 text-xs text-center">
+
+                <div class="p-2 border border-orange-500/30 bg-orange-500/5 rounded">
+                <div class="text-orange-400 font-bold">KiCad</div>
+                <div class="text-neutral-400">EDA Suite</div>
+                </div>
+
+                <div class="p-2 border border-cyan-500/30 bg-cyan-500/5 rounded">
+                <div class="text-cyan-400 font-bold">2-Layer</div>
+                <div class="text-neutral-400">PCB Layout</div>
+                </div>
+
+                <div class="p-2 border border-purple-500/30 bg-purple-500/5 rounded">
+                <div class="text-purple-400 font-bold">Arduino</div>
+                <div class="text-neutral-400">Integration</div>
+                </div>
+
+                <div class="p-2 border border-emerald-500/30 bg-emerald-500/5 rounded">
+                <div class="text-emerald-400 font-bold">Plug&Play</div>
+                <div class="text-neutral-400">Robotics I/O</div>
+                </div>
+
+                </div>
+
+                <!-- TECH STACK -->
+                <div class="flex flex-wrap gap-1 text-[10px] font-mono">
+
+                <span class="px-2 py-1 border border-neutral-700 rounded">KiCad</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">PCB Layout</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Schematic Capture</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">DFM</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Embedded Systems</span>
+
+                </div>
+
+                <!-- DESIGN FLOW -->
+                <div class="font-mono text-[11px] text-center space-y-2">
+
+                <div class="text-orange-300">Requirements Definition</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-cyan-300">Schematic Design</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-purple-300">Footprint Assignment</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-pink-300">PCB Routing & Layout</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-yellow-300">Design Rule Verification</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-emerald-300">Manufacturing Output</div>
+
+                </div>
+
+                <!-- SCHEMATIC -->
+                <div class="space-y-2">
+
+                <div class="text-center text-cyan-300 text-xs">
+                Schematic Design
+                </div>
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg overflow-hidden">
+
+                <img 
+                src="images/pcb_schematic.png" 
+                class="block mx-auto w-full h-auto max-w-md" 
+                />
+
+                <div class="p-2 text-center text-[10px] text-neutral-400">
+                Complete schematic including Arduino interface, power distribution and peripheral connectivity.
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- PCB LAYOUT -->
+                <div class="space-y-2">
+
+                <div class="text-center text-purple-300 text-xs">
+                PCB Layout
+                </div>
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg overflow-hidden">
+
+                <img 
+                src="images/pcb_layout.png" 
+                class="block mx-auto w-full h-auto max-w-md" 
+                />
+
+                <div class="p-2 text-center text-[10px] text-neutral-400">
+                Final routed PCB optimized for compact robotics prototyping and simplified wiring.
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- FEATURES -->
+                <div class="grid grid-cols-2 gap-3">
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg p-3">
+
+                <div class="text-cyan-400 text-xs font-bold">
+                Power Distribution
+                </div>
+
+                <div class="text-neutral-400 text-[10px] mt-2">
+                Centralized power routing for sensors and actuators.
+                </div>
+
+                </div>
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg p-3">
+
+                <div class="text-purple-400 text-xs font-bold">
+                Connector Expansion
+                </div>
+
+                <div class="text-neutral-400 text-[10px] mt-2">
+                Simplified access to Arduino I/O pins.
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- CONTRIBUTIONS -->
+                <div class="border-l-2 border-orange-500 pl-3 text-xs space-y-1">
+
+                <div>• Designed complete schematic from component selection to manufacturing outputs</div>
+
+                <div>• Created custom PCB layout with routing optimized for robotics prototyping</div>
+
+                <div>• Reduced wiring complexity through centralized connector architecture</div>
+
+                <div>• Performed footprint verification and design rule checking prior to fabrication</div>
+
+                <div>• Generated Gerber and manufacturing files for production readiness</div>
+
+                </div>
+
+                <!-- SUMMARY -->
+                <p class="text-xs text-neutral-300">
+
+                Designed a custom Arduino breakout PCB to simplify robotics prototyping and embedded system development. The board consolidated power distribution, sensor interfaces, and microcontroller connectivity into a compact plug-and-play platform, reducing wiring complexity while improving reliability and maintainability.
+
+                </p>
+
+                </div>
+
+                `
+                },
+            'proj-scanner': {
+                file: "sys_log:~/Projects/document_scanner.log",
+                output: `
+
+                <div class="space-y-4">
+
+                <p class="text-nordic-accent font-bold text-sm">
+                Computer Vision Document Scanner
+                </p>
+
+                <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                Oct – Nov 2023
+                </p>
+
+                <!-- METRICS -->
+                <div class="grid grid-cols-4 gap-2 text-xs text-center">
+
+                <div class="p-2 border border-orange-500/30 bg-orange-500/5 rounded">
+                <div class="text-orange-400 font-bold">OpenCV</div>
+                <div class="text-neutral-400">Vision Library</div>
+                </div>
+
+                <div class="p-2 border border-cyan-500/30 bg-cyan-500/5 rounded">
+                <div class="text-cyan-400 font-bold">Canny</div>
+                <div class="text-neutral-400">Edge Detection</div>
+                </div>
+
+                <div class="p-2 border border-purple-500/30 bg-purple-500/5 rounded">
+                <div class="text-purple-400 font-bold">Contours</div>
+                <div class="text-neutral-400">Shape Extraction</div>
+                </div>
+
+                <div class="p-2 border border-emerald-500/30 bg-emerald-500/5 rounded">
+                <div class="text-emerald-400 font-bold">Warp</div>
+                <div class="text-neutral-400">Perspective Fix</div>
+                </div>
+
+                </div>
+
+                <!-- TECH STACK -->
+                <div class="flex flex-wrap gap-1 text-[10px] font-mono">
+
+                <span class="px-2 py-1 border border-neutral-700 rounded">Python</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">OpenCV</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">NumPy</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Image Processing</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Homography</span>
+
+                </div>
+
+                <!-- PIPELINE -->
+                <div class="font-mono text-[11px] text-center space-y-2">
+
+                <div class="text-orange-300">Input Image</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-cyan-300">Grayscale Conversion</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-purple-300">Canny Edge Detection</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-pink-300">Contour Extraction</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-yellow-300">Corner Identification</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-blue-300">Perspective Transform</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-emerald-300">Document Rectification</div>
+
+                </div>
+
+                <!-- EDGE DETECTION RESULT -->
+                <div class="space-y-2">
+
+                <div class="text-center text-cyan-300 text-xs">
+                Edge Detection & Contour Extraction
+                </div>
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg overflow-hidden">
+
+                <img 
+                src="images/document_contours.png" 
+                class="block mx-auto w-full h-auto max-w-md" 
+                />
+
+                <div class="p-2 text-center text-[10px] text-neutral-400">
+                Detected document boundaries using Canny edge detection and contour analysis.
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- FINAL RESULT -->
+                <div class="space-y-2">
+
+                <div class="text-center text-emerald-300 text-xs">
+                Perspective Corrected Output
+                </div>
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg overflow-hidden">
+
+                <img 
+                src="images/document_output.png" 
+                class="block mx-auto w-full h-auto max-w-md" 
+                />
+
+                <div class="p-2 text-center text-[10px] text-neutral-400">
+                Perspective transformation applied to generate a flattened document scan.
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- PROCESS COMPARISON -->
+                <div class="grid grid-cols-2 gap-3">
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg overflow-hidden">
+
+                <img
+                src="images/document_original.png"
+                class="w-full"
+                />
+
+                <div class="p-2 text-center text-[10px] text-neutral-400">
+                Original Input Image
+                </div>
+
+                </div>
+
+                <div class="bg-neutral-900 border border-neutral-700 rounded-lg overflow-hidden">
+
+                <img
+                src="images/document_output.png"
+                class="w-full"
+                />
+
+                <div class="p-2 text-center text-[10px] text-neutral-400">
+                Scanner Output
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- KEY CONTRIBUTIONS -->
+                <div class="border-l-2 border-cyan-500 pl-3 text-xs space-y-1">
+
+                <div>• Developed a complete document scanning pipeline using OpenCV</div>
+
+                <div>• Implemented Canny edge detection for boundary extraction</div>
+
+                <div>• Applied contour filtering to isolate document candidates</div>
+
+                <div>• Computed corner ordering and homography matrices</div>
+
+                <div>• Performed perspective correction for document rectification</div>
+
+                <div>• Generated flattened scanner-style outputs from arbitrary viewing angles</div>
+
+                </div>
+
+                <!-- PERFORMANCE -->
+                <div class="bg-black/30 rounded p-3 font-mono text-[11px] border border-neutral-800">
+
+                Input Image<br>
+                ↓<br>
+                Edge Detection<br>
+                ↓<br>
+                Contour Selection<br>
+                ↓<br>
+                Perspective Warp<br>
+                ↓<br>
+                Scanned Document
+
+                </div>
+
+                <!-- SUMMARY -->
+                <p class="text-xs text-neutral-300">
+
+                Designed and implemented a computer vision document scanning system using OpenCV. The pipeline automatically detected document boundaries, extracted corner coordinates, and applied homography-based perspective correction to generate scanner-quality outputs from handheld camera images.
+
+                </p>
+
+                </div>
+
+                `
+                },
+
+            'proj-ml': {
+                file: "sys_log:~/Projects/ml_audio_classification.log",
+                output: `
+
+                <div class="space-y-4">
+
+                <p class="text-nordic-accent font-bold text-sm">
+                ML Audio Classification Experiments
+                </p>
+
+                <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                2024 – 2025
+                </p>
+
+                <!-- METRICS -->
+                <div class="grid grid-cols-4 gap-2 text-xs text-center">
+
+                <div class="p-2 border border-cyan-500/30 bg-cyan-500/5 rounded">
+                <div class="text-cyan-400 font-bold">50+</div>
+                <div class="text-neutral-400">Audio Samples</div>
+                </div>
+
+                <div class="p-2 border border-emerald-500/30 bg-emerald-500/5 rounded">
+                <div class="text-emerald-400 font-bold">CNN</div>
+                <div class="text-neutral-400">Models Tested</div>
+                </div>
+
+                <div class="p-2 border border-orange-500/30 bg-orange-500/5 rounded">
+                <div class="text-orange-400 font-bold">RNN</div>
+                <div class="text-neutral-400">Sequence Learning</div>
+                </div>
+
+                <div class="p-2 border border-purple-500/30 bg-purple-500/5 rounded">
+                <div class="text-purple-400 font-bold">PyTorch</div>
+                <div class="text-neutral-400">Training</div>
+                </div>
+
+                </div>
+
+                <!-- TECH STACK -->
+                <div class="flex flex-wrap gap-1 text-[10px] font-mono">
+
+                <span class="px-2 py-1 border border-neutral-700 rounded">Python</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">PyTorch</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">TensorFlow</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">NumPy</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Audio Processing</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Feature Extraction</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Classification</span>
+
+                </div>
+
+                <!-- PIPELINE -->
+                <div class="font-mono text-[11px] text-center space-y-2">
+
+                <div class="text-orange-300">Raw Audio Dataset</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-cyan-300">Feature Extraction</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-purple-300">CNN / RNN Training</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-pink-300">Performance Evaluation</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-emerald-300">Model Comparison & Analysis</div>
+
+                </div>
+
+                <!-- RESULTS -->
+                <div class="bg-black/30 rounded p-3 font-mono text-[11px] border border-neutral-800">
+
+                Dataset Size = ~50 Samples<br>
+                Frameworks = PyTorch / TensorFlow<br>
+                Architectures = CNN, RNN<br>
+                Task = Audio Classification<br>
+                Focus = Generalisation Analysis
+
+                </div>
+
+                <!-- CONTRIBUTIONS -->
+                <div class="border-l-2 border-cyan-500 pl-3 text-xs space-y-1">
+
+                <div>• Built end-to-end audio classification training pipelines</div>
+
+                <div>• Evaluated CNN and lightweight RNN architectures</div>
+
+                <div>• Performed feature extraction and preprocessing on audio datasets</div>
+
+                <div>• Compared training behaviour, accuracy, and generalisation performance</div>
+
+                <div>• Investigated model suitability for deployment on limited datasets</div>
+
+                </div>
+
+                <p class="text-xs text-neutral-300 mt-3">
+
+                Conducted machine learning experiments using TensorFlow and PyTorch
+                to investigate audio classification techniques on small datasets.
+                Explored convolutional and recurrent neural network architectures,
+                evaluated model performance, and analysed generalisation behaviour
+                under limited training data conditions.
+
+                </p>
+
+                </div>
+
+                `
+                },
+
+            'proj-sdr': {
+                file: "sys_log:~/Projects/airplane_detection_sdr.log",
+                output: `
+                <div class="space-y-4">
+
+                <p class="text-nordic-accent font-bold text-sm">
+                Airplane Detection & SDR Analysis
+                </p>
+
+                <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                Mar – Apr 2023
+                </p>
+
+                <div class="font-mono text-[11px] text-center space-y-2">
+
+                <div class="text-orange-300">RF Signal Capture (PlutoSDR)</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-cyan-300">MATLAB Signal Processing</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-purple-300">FM Demodulation</div>
+                <div class="text-neutral-500">↓</div>
+
+                <div class="text-emerald-300">Real-Time Audio Output</div>
+
+                </div>
+
+                </div>
+                `
+                },
+            // Education Logs
+            'edu-academic': {
+                file: "sys_log:~/Education/academic_record.log",
+                output: `
+
+                <div class="space-y-4">
+
+                <p class="text-emerald-400 font-bold text-sm">
+                Academic Record
+                </p>
+
+                <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                2021 – 2025
+                </p>
+
+                <!-- METRICS -->
+                <div class="grid grid-cols-4 gap-2 text-xs text-center">
+
+                <div class="p-2 border border-emerald-500/30 bg-emerald-500/5 rounded">
+                <div class="text-emerald-400 font-bold">8.69</div>
+                <div class="text-neutral-400">CGPA</div>
+                </div>
+
+                <div class="p-2 border border-cyan-500/30 bg-cyan-500/5 rounded">
+                <div class="text-cyan-400 font-bold">4 Years</div>
+                <div class="text-neutral-400">Degree Program</div>
+                </div>
+
+                <div class="p-2 border border-orange-500/30 bg-orange-500/5 rounded">
+                <div class="text-orange-400 font-bold">ETC</div>
+                <div class="text-neutral-400">Engineering</div>
+                </div>
+
+                <div class="p-2 border border-purple-500/30 bg-purple-500/5 rounded">
+                <div class="text-purple-400 font-bold">86.33%</div>
+                <div class="text-neutral-400">HSSCE</div>
+                </div>
+
+                </div>
+
+                <!-- COURSEWORK -->
+                <div>
+
+                <p class="text-cyan-300 text-xs font-bold mb-2">
+                Relevant Coursework
+                </p>
+
+                <div class="flex flex-wrap gap-1 text-[10px] font-mono">
+
+                <span class="px-2 py-1 border border-neutral-700 rounded">Computer Networks</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Signal Processing</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Embedded Systems</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Control Systems</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">AI / ML</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">VLSI</span>
+
+                </div>
+
+                </div>
+
+                <!-- DETAILS -->
+                <div class="grid grid-cols-2 gap-3">
+
+                <div class="bg-black/30 rounded p-3 border border-neutral-800">
+
+                <p class="text-cyan-300 text-[11px] font-bold mb-2">
+                Degree
+                </p>
+
+                <div class="font-mono text-[11px]">
+
+                Institution:<br>
+                Goa College of Engineering<br><br>
+
+                Programme:<br>
+                B.E. Electronics & Telecommunication<br><br>
+
+                CGPA:<br>
+                8.69 / 10.0
+
+                </div>
+
+                </div>
+
+                <div class="bg-black/30 rounded p-3 border border-neutral-800">
+
+                <p class="text-purple-300 text-[11px] font-bold mb-2">
+                Pre-University
+                </p>
+
+                <div class="font-mono text-[11px]">
+
+                Institution:<br>
+                Don Bosco Higher Secondary School<br><br>
+
+                Stream:<br>
+                Science<br><br>
+
+                Score:<br>
+                86.33%
+
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- HIGHLIGHTS -->
+                <div class="border-l-2 border-emerald-500 pl-3 text-xs space-y-1">
+
+                <div>• Strong academic performance throughout engineering studies</div>
+
+                <div>• Coursework spanning AI/ML, Embedded Systems, Signal Processing and Networks</div>
+
+                <div>• Applied academic concepts through hands-on engineering projects</div>
+
+                <div>• Developed interdisciplinary skills across software, electronics and computer vision</div>
+
+                </div>
+
+                </div>
+
+                `
+                },
+            // Certifications Log
+            'cert-list': {
+                file: "sys_log:~/Achievements/credentials.log",
+                output: `
+
+                <div class="space-y-4">
+
+                <p class="text-purple-400 font-bold text-sm">
+                Achievements & Certifications
+                </p>
+
+                <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                Academic Recognition & Professional Development
+                </p>
+
+                <!-- METRICS -->
+                <div class="grid grid-cols-4 gap-2 text-xs text-center">
+
+                <div class="p-2 border border-yellow-500/30 bg-yellow-500/5 rounded">
+                <div class="text-yellow-400 font-bold">2</div>
+                <div class="text-neutral-400">1st Places</div>
+                </div>
+
+                <div class="p-2 border border-purple-500/30 bg-purple-500/5 rounded">
+                <div class="text-purple-400 font-bold">5</div>
+                <div class="text-neutral-400">Certificates</div>
+                </div>
+
+                <div class="p-2 border border-cyan-500/30 bg-cyan-500/5 rounded">
+                <div class="text-cyan-400 font-bold">NPTEL</div>
+                <div class="text-neutral-400">Coursework</div>
+                </div>
+
+                <div class="p-2 border border-emerald-500/30 bg-emerald-500/5 rounded">
+                <div class="text-emerald-400 font-bold">2025</div>
+                <div class="text-neutral-400">Latest Award</div>
+                </div>
+
+                </div>
+
+                <!-- AWARDS -->
+                <div>
+
+                <p class="text-yellow-300 text-xs font-bold mb-2">
+                Awards & Recognition
+                </p>
+
+                <div class="border-l-2 border-yellow-500 pl-3 text-xs space-y-2">
+
+                <div>
+                <span class="text-yellow-400 font-bold">🏆 1st Place</span><br>
+                Technical Treasure Hunt — Technix 2025<br>
+                <span class="text-neutral-400 text-[11px]">
+                Puzzle-solving and technical aptitude competition
+                </span>
+                </div>
+
+                <div>
+                <span class="text-yellow-400 font-bold">🏆 1st Place</span><br>
+                Escape Room Challenge — Technix 2025<br>
+                <span class="text-neutral-400 text-[11px]">
+                Logic, teamwork and lateral-thinking competition
+                </span>
+                </div>
+
+                </div>
+
+                </div>
+
+                <!-- CERTIFICATIONS -->
+                <div>
+
+                <p class="text-cyan-300 text-xs font-bold mb-2">
+                Verified Certifications
+                </p>
+
+                <div class="grid grid-cols-1 gap-2 text-xs">
+
+                <div class="bg-black/30 rounded p-2 border border-neutral-800">
+                <span class="text-white">Data Science for Engineers</span>
+                <span class="text-neutral-500"> — NPTEL</span>
+                </div>
+
+                <div class="bg-black/30 rounded p-2 border border-neutral-800">
+                <span class="text-white">Python for Data Science</span>
+                <span class="text-neutral-500"> — NPTEL</span>
+                </div>
+
+                <div class="bg-black/30 rounded p-2 border border-neutral-800">
+                <span class="text-white">Computer Graphics</span>
+                <span class="text-neutral-500"> — NPTEL</span>
+                </div>
+
+                <div class="bg-black/30 rounded p-2 border border-neutral-800">
+                <span class="text-white">Verilog HDL & FPGA Design Flow</span>
+                <span class="text-neutral-500"> — Goa College of Engineering</span>
+                </div>
+
+                <div class="bg-black/30 rounded p-2 border border-neutral-800">
+                <span class="text-white">CAD Modelling & 3D Printing</span>
+                <span class="text-neutral-500"> — Goa College of Engineering</span>
+                </div>
+
+                </div>
+
+                </div>
+
+                </div>
+
+                `
+                },
+            // Volunteer Logs
+            'vol-ieee': {
+                file: "sys_log:~/Volunteer/ieee_wie_chairperson.log",
+                output: `
+
+                <div class="space-y-4">
+
+                <p class="text-pink-400 font-bold text-sm">
+                Chairperson — IEEE Student Branch WIE Council
+                </p>
+
+                <p class="text-neutral-500 font-mono border-b border-neutral-700 pb-2">
+                Leadership & Event Management Track
+                </p>
+
+                <!-- METRICS -->
+                <div class="grid grid-cols-4 gap-2 text-xs text-center">
+
+                <div class="p-2 border border-pink-500/30 bg-pink-500/5 rounded">
+                <div class="text-pink-400 font-bold">1000+</div>
+                <div class="text-neutral-400">Participants</div>
+                </div>
+
+                <div class="p-2 border border-cyan-500/30 bg-cyan-500/5 rounded">
+                <div class="text-cyan-400 font-bold">South India</div>
+                <div class="text-neutral-400">Summit Reach</div>
+                </div>
+
+                <div class="p-2 border border-orange-500/30 bg-orange-500/5 rounded">
+                <div class="text-orange-400 font-bold">100+</div>
+                <div class="text-neutral-400">Treasure Hunt Players</div>
+                </div>
+
+                <div class="p-2 border border-purple-500/30 bg-purple-500/5 rounded">
+                <div class="text-purple-400 font-bold">IEEE</div>
+                <div class="text-neutral-400">Leadership</div>
+                </div>
+
+                </div>
+
+                <!-- EVENT GALLERY -->
+                <div class="grid grid-cols-2 gap-3">
+
+                <div>
+                <img src="images/wie_summit_1.jpg"
+                class="rounded border border-neutral-700">
+                </div>
+
+                <div>
+                <img src="images/wie_summit_2.jpg"
+                class="rounded border border-neutral-700">
+                </div>
+                </div>
+
+                <p class="text-[10px] text-center text-neutral-400 mt-1">
+                South India AI & Women's Summit
+                </p>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                <div>
+                <img src="images/wie_talk_1.jpg"
+                class="rounded border border-neutral-700">
+                </div>
+
+                <div>
+                <img src="images/wie_talk_2.jpg"
+                class="rounded border border-neutral-700">
+                </div>
+                </div>
+                <p class="text-[10px] text-center text-neutral-400 mt-1">
+                Industry & Academic Speaker Sessions
+                </p>
+
+                <div class="grid grid-cols-2 gap-3">
+
+                <div>
+                <img src="images/tech_act_1.jpg"
+                class="rounded border border-neutral-700">
+                </div>
+
+                <div>
+                <img src="images/tech_act_2.jpg"
+                class="rounded border border-neutral-700">
+                </div>
+                </div>
+                <p class="text-[10px] text-center text-neutral-400 mt-1">
+                Other Technical Engagement Activities
+                </p>
+
+                <!-- RESPONSIBILITIES -->
+                <div class="border-l-2 border-pink-500 pl-3 text-xs space-y-1">
+
+                <div>• Led IEEE WIE council activities and event execution</div>
+
+                <div>• Coordinated a South India-wide AI & Women's Summit hosting 1000+ participants</div>
+
+                <div>• Managed logistics, scheduling, publicity and volunteer coordination</div>
+
+                <div>• Worked with speakers from academia, industry and research organisations</div>
+
+                <div>• Organized technical competitions and engineering engagement activities</div>
+
+                </div>
+
+                <!-- TREASURE HUNT -->
+                <div class="bg-black/30 rounded p-3 border border-neutral-800">
+
+                <p class="text-cyan-300 text-[11px] font-bold mb-2">
+                Women's Day Technical Treasure Hunt
+                </p>
+
+                <div class="font-mono text-[11px] text-neutral-300">
+
+                Players: 100+<br>
+                Budget: ₹0<br>
+                Mode: Online Interactive Challenge<br>
+                Focus: Logic, Engineering Reasoning, Team Problem Solving
+
+                </div>
+
+                </div>
+
+                <!-- SKILLS -->
+                <div>
+
+                <p class="text-purple-300 text-xs font-bold mb-2">
+                Leadership Experience
+                </p>
+
+                <div class="flex flex-wrap gap-1 text-[10px] font-mono">
+
+                <span class="px-2 py-1 border border-neutral-700 rounded">Event Management</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Leadership</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Public Speaking</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Volunteer Coordination</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Technical Events</span>
+                <span class="px-2 py-1 border border-neutral-700 rounded">Problem Design</span>
+
+                </div>
+
+                </div>
+
+                </div>
+
+                `
+                }
+        };
+
+        // Structural Directory Mapping Layout Engine Definitions
+        const directories = {
+            root: [
+                { name: 'Experience', type: 'folder', target: 'experience' },
+                { name: 'Projects', type: 'folder', target: 'projects' },
+                { name: 'Education', type: 'folder', target: 'education' },
+                { name: 'Certifications', type: 'folder', target: 'certs' },
+                { name: 'Volunteer', type: 'folder', target: 'volunteer' }
+            ],
+            experience: [
+                { name: 'godrej_enterprises.log', type: 'file', target: 'exp-godrej' },
+                { name: 'isro_satellite_centre.log', type: 'file', target: 'exp-isro' }
+            ],
+            projects: [
+                { name: 'uuv_navigation.log', type: 'file', target: 'proj-uuv' },
+                { name: 'genetic_algorithm.log', type: 'file', target: 'proj-ga' },                   
+                { name: 'arduino_breakout_pcb.log', type: 'file', target: 'proj-pcb' },
+                { name: 'document_scanner.log', type: 'file', target: 'proj-scanner' },
+                { name: 'ml_experiments.log', type: 'file', target: 'proj-ml' }, 
+                { name: 'airplane_detection_sdr.log', type: 'file', target: 'proj-sdr' }
+            ],
+            education: [
+                { name: 'academic_record.log', type: 'file', target: 'edu-academic' }
+            ],
+            certs: [
+                { name: 'credentials.log', type: 'file', target: 'cert-list' }
+            ],
+            volunteer: [
+                { name: 'ieee_chairperson.log', type: 'file', target: 'vol-ieee' }
+            ]
+        };
+
+        function changeDirectory(dirKey) {
+            const grid = document.getElementById('explorer-grid');
+            const pathLabel = document.getElementById('current-path');
+            grid.innerHTML = '';
+            pathLabel.textContent = dirKey;
+
+            const items = directories[dirKey];
+            if (!items) return;
+
+            items.forEach(item => {
+                const node = document.createElement('div');
+                node.className = "flex flex-col items-center text-center cursor-pointer group w-24 sm:w-28";
+                
+                if (item.type === 'folder') {
+                    node.onclick = () => changeDirectory(item.target);
+                    node.innerHTML = `
+                        <div class="w-16 h-14 bg-nordic-folder text-white font-bold text-2xl rounded-md shadow flex items-center justify-center group-hover:bg-sky-500 transition-colors">📁</div>
+                        <span class="text-[13px] mt-2 font-mono text-neutral-300 tracking-wide truncate w-full group-hover:text-white group-hover:underline">${item.name}</span>
+                    `;
+                } else {
+                    node.onclick = () => openProjectDetails(item.target);
+                    node.innerHTML = `
+                        <div class="w-16 h-14 bg-zinc-800 border border-zinc-700 text-amber-400 font-mono text-base rounded-md shadow flex items-center justify-center group-hover:bg-zinc-700 transition-colors">📄</div>
+                        <span class="text-[13px] mt-2 font-mono text-neutral-300 tracking-wide truncate w-full group-hover:text-white group-hover:underline">${item.name}</span>
+                    `;
+                }
+                grid.appendChild(node);
+            });
+        }
+
+        const windowSourceTriggers = {};
+
+        // Bring targeted window to top layer seamlessly
+        function bringToFront(element) {
+            document.querySelectorAll('.window-app').forEach(w => w.style.zIndex = "20");
+            element.style.zIndex = "40";
+        }
+
+        // Center targeted window inside view space limits
+        function centerWindow(element) {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const windowWidth = element.offsetWidth || parseInt(element.style.width) || 600;
+            const windowHeight = element.offsetHeight || parseInt(element.style.height) || 380;
+            
+            element.style.left = Math.max(16, (viewportWidth - windowWidth) / 2) + "px";
+            element.style.top = Math.max(40, (viewportHeight - windowHeight) / 2) + "px";
+        }
+
+        function animateOpenWindow(id, triggerElement) {
+            const targetWin = document.getElementById(id);
+            
+            if (targetWin.classList.contains('active-window') && targetWin.style.zIndex === "40") {
+                minimizeWindow(id);
+                return;
+            } else if (targetWin.classList.contains('active-window')) {
+                bringToFront(targetWin);
+                return;
+            }
+
+            windowSourceTriggers[id] = triggerElement;
+            const rect = triggerElement.getBoundingClientRect();
+            const sourceX = rect.left + rect.width / 2;
+            const sourceY = rect.top + rect.height / 2;
+
+            targetWin.style.transform = "scale(0)";
+            targetWin.style.opacity = "0";
+            targetWin.classList.add('active-window');
+            bringToFront(targetWin);
+            
+            if(!targetWin.style.top || targetWin.style.top === "") {
+                centerWindow(targetWin);
+            }
+
+            const winRect = targetWin.getBoundingClientRect();
+            const originX = ((sourceX - winRect.left) / winRect.width) * 100;
+            const originY = ((sourceY - winRect.top) / winRect.height) * 100;
+            targetWin.style.transformOrigin = `${originX}% ${originY}%`;
+
+            targetWin.offsetHeight;
+            targetWin.classList.add('active-window');
+        }
+
+        function minimizeWindow(id) {
+            const targetWin = document.getElementById(id);
+            let fallbackId = 'dock-terminal';
+            if (id === 'win-explorer') fallbackId = 'dock-explorer';
+            if (id === 'win-connect') fallbackId = 'dock-connect';
+
+            const trigger = windowSourceTriggers[id] || document.getElementById(fallbackId);
+            const rect = trigger.getBoundingClientRect();
+            const sourceX = rect.left + rect.width / 2;
+            const sourceY = rect.top + rect.height / 2;
+            const winRect = targetWin.getBoundingClientRect();
+
+            const originX = ((sourceX - winRect.left) / winRect.width) * 100;
+            const originY = ((sourceY - winRect.top) / winRect.height) * 100;
+            targetWin.style.transformOrigin = `${originX}% ${originY}%`;
+
+            targetWin.classList.remove('active-window');
+        }
+
+        function closeWindow(id) {
+            const targetWin = document.getElementById(id);
+            targetWin.style.transformOrigin = "center center";
+            targetWin.classList.remove('active-window');
+            
+            setTimeout(() => {
+                targetWin.style.width = "";
+                targetWin.style.height = "";
+                targetWin.style.left = "";
+                targetWin.style.top = "";
+            }, 280);
+        }
+
+        function openProjectDetails(key) {
+            const data = workspaceRegistry[key];
+            if(data) {
+                document.getElementById('txt-proj-header').textContent = data.file;
+                document.getElementById('txt-proj-payload').innerHTML = data.output;
+                const viewer = document.getElementById('win-project-viewer');
+                
+                bringToFront(viewer);
+                if(!viewer.classList.contains('active-window')) {
+                    centerWindow(viewer);
+                    viewer.classList.add('active-window');
+                }
+            }
+        }
+
+        function formatClockValue(value) {
+            return value.toString().padStart(2, '0');
+        }
+
+        function updateSystemClock() {
+            const now = new Date();
+            const options = { weekday: 'short', day: 'numeric', month: 'short' };
+            const dateString = now.toLocaleDateString(undefined, options);
+            const timeString = `${formatClockValue(now.getHours())}:${formatClockValue(now.getMinutes())}`;
+            const clockElement = document.getElementById('status-clock');
+            if (clockElement) {
+                clockElement.innerHTML = `${dateString} &nbsp; <span class="font-bold">${timeString}</span>`;
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const mainTerminal = document.getElementById('win-terminal');
+            centerWindow(mainTerminal);
+            windowSourceTriggers['win-terminal'] = document.getElementById('dock-terminal');
+            mainTerminal.classList.add('active-window');
+            bringToFront(mainTerminal);
+            
+            // Render initial root directory state for the file manager
+            changeDirectory('root');
+            updateSystemClock();
+            setInterval(updateSystemClock, 1000);
+        });
+
+        // NATIVE WINDOW MANAGEMENT SYSTEM (DRAG + EDGE RESIZE LOGIC)
+        document.querySelectorAll('.window-app').forEach(bindWindowInteractions);
+
+        function bindWindowInteractions(targetWindow) {
+            const topBar = targetWindow.querySelector('.cursor-move');
+            let initialX, initialY, initialWidth, initialHeight, initialLeft, initialTop;
+
+            targetWindow.addEventListener('mousedown', () => {
+                bringToFront(targetWindow);
+            });
+
+            if (topBar) {
+                topBar.onmousedown = function(e) {
+                    if (e.target.tagName === 'BUTTON' || e.target.closest('a')) return;
+                    e.preventDefault();
+                    bringToFront(targetWindow);
+                    initialX = e.clientX;
+                    initialY = e.clientY;
+                    initialLeft = targetWindow.offsetLeft;
+                    initialTop = targetWindow.offsetTop;
+
+                    document.onmousemove = function(e) {
+                        targetWindow.style.left = (initialLeft + (e.clientX - initialX)) + "px";
+                        targetWindow.style.top = (initialTop + (e.clientY - initialY)) + "px";
+                    };
+                    document.onmouseup = releaseGlobalEvents;
+                };
+            }
+
+            const handles = targetWindow.querySelectorAll('.resize-handle');
+            handles.forEach(handle => {
+                handle.onmousedown = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    bringToFront(targetWindow);
+                    
+                    initialX = e.clientX;
+                    initialY = e.clientY;
+                    initialWidth = targetWindow.offsetWidth;
+                    initialHeight = targetWindow.offsetHeight;
+                    initialLeft = targetWindow.offsetLeft;
+                    initialTop = targetWindow.offsetTop;
+
+                    const type = handle.className.split(' ').find(c => c.startsWith('resize-')).replace('resize-', '');
+
+                    document.onmousemove = function(e) {
+                        const deltaX = e.clientX - initialX;
+                        const deltaY = e.clientY - initialY;
+
+                        if (type.includes('e')) targetWindow.style.width = Math.max(340, initialWidth + deltaX) + "px";
+                        if (type.includes('s')) targetWindow.style.height = Math.max(200, initialHeight + deltaY) + "px";
+                        
+                        if (type.includes('w')) {
+                            const newWidth = initialWidth - deltaX;
+                            if (newWidth > 340) {
+                                targetWindow.style.width = newWidth + "px";
+                                targetWindow.style.left = (initialLeft + deltaX) + "px";
+                            }
+                        }
+                        if (type.includes('n')) {
+                            const newHeight = initialHeight - deltaY;
+                            if (newHeight > 200) {
+                                targetWindow.style.height = newHeight + "px";
+                                targetWindow.style.top = (initialTop + deltaY) + "px";
+                            }
+                        }
+                    };
+                    document.onmouseup = releaseGlobalEvents;
+                };
+            });
+
+            function releaseGlobalEvents() {
+                document.onmousemove = null;
+                document.onmouseup = null;
+            }
+        }
+    </script>
+</body>
+</html>
